@@ -10,6 +10,7 @@ use App\Entity\Image;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Entity\Booking;
 
 class AppFixtures extends Fixture
 {
@@ -84,13 +85,40 @@ class AppFixtures extends Fixture
                 ->setRooms(mt_rand(1, 5))
                 ->setAuthor($user);
 
-            for($j=1; $j <= mt_rand(2,5); $j++) {
+            for($j = 1; $j <= mt_rand(2,5); $j++) {
                 $image = new Image;
                 $image->setUrl($faker->imageUrl())
                         ->setCaption($faker->sentence())
                         ->setAd($ad);
 
                 $manager->persist($image);
+            }
+
+            //Gestion des réservations
+
+            for($j = 1; $j <= mt_rand(1, 10); $j++) {
+                $booking = new Booking();
+
+                $createdAt = $faker->dateTimeBetween('-6months');
+                $startDate = $faker->dateTimeBetween('-3months');
+
+                //Gestion de la date de fin
+                $duration = mt_rand(3,10);
+                $endDate = (clone $startDate)->modify("+$duration days");
+
+                $amount = $ad->getPrice() * $duration;
+                $booker = $users[mt_rand(0, count($users) -1)];
+                $comment = $faker->paragraph();
+
+                $booking->setBooker($booker)
+                        ->setAd($ad)
+                        ->setStartDate($startDate)
+                        ->setEndDate($endDate)
+                        ->setCreatedAt($createdAt)
+                        ->setAmount($amount)
+                        ->setComment($comment);
+
+                $manager->persist($booking);
             }
 
             $manager->persist($ad);
