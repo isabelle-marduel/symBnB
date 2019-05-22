@@ -35,7 +35,7 @@ class AnnonceType extends ApplicationType
                     [
                         'required' => false
                     ]
-                ))
+            ))
             ->add(
                 'coverImage',
                 UrlType::class,
@@ -55,7 +55,8 @@ class AnnonceType extends ApplicationType
                 TextareaType::class,
                 $this->getConfiguration(
                     "Contenu de l'annonce",
-                    "Faites une description plus détaillée de votre annonce"))
+                    "Faites une description plus détaillée de votre annonce"
+            ))
             ->add(
                 'rooms',
                 IntegerType::class,
